@@ -1,0 +1,1135 @@
+{
+    "problems": [
+        {
+            "name": "renovate",
+            "level": 40,
+            "logContext": "Nq1618Jcb11YrqhmsZgZb",
+            "err": {
+                "code": "MODULE_NOT_FOUND",
+                "requireStack": [
+                    "/opt/homebrew/lib/node_modules/renovate/dist/expose.cjs",
+                    "/opt/homebrew/lib/node_modules/renovate/dist/instrumentation/index.js",
+                    "/opt/homebrew/lib/node_modules/renovate/dist/renovate.js"
+                ],
+                "message": "Cannot find module 're2'\nRequire stack:\n- /opt/homebrew/lib/node_modules/renovate/dist/expose.cjs\n- /opt/homebrew/lib/node_modules/renovate/dist/instrumentation/index.js\n- /opt/homebrew/lib/node_modules/renovate/dist/renovate.js",
+                "stack": "Error: Cannot find module 're2'\nRequire stack:\n- /opt/homebrew/lib/node_modules/renovate/dist/expose.cjs\n- /opt/homebrew/lib/node_modules/renovate/dist/instrumentation/index.js\n- /opt/homebrew/lib/node_modules/renovate/dist/renovate.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)\n    at Module._load (node:internal/modules/cjs/loader:1226:37)\n    at TracingChannel.traceSync (node:diagnostics_channel:328:14)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)\n    at Module.require (node:internal/modules/cjs/loader:1503:12)\n    at require (node:internal/modules/helpers:152:16)\n    at re2 (/opt/homebrew/lib/node_modules/renovate/lib/expose.cjs:16:10)\n    at Object.<anonymous> (/opt/homebrew/lib/node_modules/renovate/lib/util/regex.ts:22:20)\n    at Module._compile (node:internal/modules/cjs/loader:1760:14)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1892:10)\n    at Module.load (node:internal/modules/cjs/loader:1480:32)\n    at Module._load (node:internal/modules/cjs/loader:1299:12)\n    at TracingChannel.traceSync (node:diagnostics_channel:328:14)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)\n    at Module.require (node:internal/modules/cjs/loader:1503:12)\n    at require (node:internal/modules/helpers:152:16)\n    at Object.<anonymous> (/opt/homebrew/lib/node_modules/renovate/lib/util/string-match.ts:3:1)\n    at Module._compile (node:internal/modules/cjs/loader:1760:14)"
+            },
+            "msg": "RE2 not usable, falling back to RegExp"
+        }
+    ],
+    "repositories": {
+        "rai-wtag/renov-pilot05": {
+            "problems": [],
+            "branches": [
+                {
+                    "branchName": "renovate/all-non-major-dependencies",
+                    "prNo": null,
+                    "prTitle": "Update all non-major dependencies",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "devise",
+                            "displayPending": "",
+                            "fixedVersion": "\"4.8.0\"",
+                            "currentVersion": "4.8.0",
+                            "currentValue": "\"4.8.0\"",
+                            "newValue": "\"4.9.4\"",
+                            "newVersion": "4.9.4",
+                            "packageFile": "Gemfile",
+                            "updateType": "minor",
+                            "packageName": "devise"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "puma",
+                            "displayPending": "",
+                            "fixedVersion": "\"5.6.0\"",
+                            "currentVersion": "5.6.0",
+                            "currentValue": "\"5.6.0\"",
+                            "newValue": "\"5.6.9\"",
+                            "newVersion": "5.6.9",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "puma"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rack",
+                            "displayPending": "",
+                            "fixedVersion": "\"2.2.0\"",
+                            "currentVersion": "2.2.0",
+                            "currentValue": "\"2.2.0\"",
+                            "newValue": "\"2.2.21\"",
+                            "newVersion": "2.2.21",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "rack"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rails",
+                            "displayPending": "",
+                            "fixedVersion": "\"6.1.0\"",
+                            "currentVersion": "6.1.0",
+                            "currentValue": "\"6.1.0\"",
+                            "newValue": "\"6.1.7.10\"",
+                            "newVersion": "6.1.7.10",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "rails"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rspec",
+                            "displayPending": "",
+                            "fixedVersion": "\"3.11.0\"",
+                            "currentVersion": "3.11.0",
+                            "currentValue": "\"3.11.0\"",
+                            "newValue": "\"3.13.2\"",
+                            "newVersion": "3.13.2",
+                            "packageFile": "Gemfile",
+                            "updateType": "minor",
+                            "packageName": "rspec"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rubocop",
+                            "displayPending": "",
+                            "fixedVersion": "\"1.25.0\"",
+                            "currentVersion": "1.25.0",
+                            "currentValue": "\"1.25.0\"",
+                            "newValue": "\"1.84.1\"",
+                            "newVersion": "1.84.1",
+                            "packageFile": "Gemfile",
+                            "updateType": "minor",
+                            "packageName": "rubocop"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "sidekiq",
+                            "displayPending": "",
+                            "fixedVersion": "\"6.5.0\"",
+                            "currentVersion": "6.5.0",
+                            "currentValue": "\"6.5.0\"",
+                            "newValue": "\"6.5.12\"",
+                            "newVersion": "6.5.12",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "sidekiq"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/devise-5.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency devise to v5",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "devise",
+                            "displayPending": "",
+                            "fixedVersion": "\"4.8.0\"",
+                            "currentVersion": "4.8.0",
+                            "currentValue": "\"4.8.0\"",
+                            "newValue": "\"5.0.0\"",
+                            "newVersion": "5.0.0",
+                            "packageFile": "Gemfile",
+                            "updateType": "major",
+                            "packageName": "devise"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/puma-7.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency puma to v7",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "puma",
+                            "displayPending": "",
+                            "fixedVersion": "\"5.6.0\"",
+                            "currentVersion": "5.6.0",
+                            "currentValue": "\"5.6.0\"",
+                            "newValue": "\"7.2.0\"",
+                            "newVersion": "7.2.0",
+                            "packageFile": "Gemfile",
+                            "updateType": "major",
+                            "packageName": "puma"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/rack-3.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency rack to v3",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rack",
+                            "displayPending": "",
+                            "fixedVersion": "\"2.2.0\"",
+                            "currentVersion": "2.2.0",
+                            "currentValue": "\"2.2.0\"",
+                            "newValue": "\"3.2.4\"",
+                            "newVersion": "3.2.4",
+                            "packageFile": "Gemfile",
+                            "updateType": "major",
+                            "packageName": "rack"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/major-ruby-on-rails-packages",
+                    "prNo": null,
+                    "prTitle": "Update dependency rails to v8",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rails",
+                            "displayPending": "",
+                            "fixedVersion": "\"6.1.0\"",
+                            "currentVersion": "6.1.0",
+                            "currentValue": "\"6.1.0\"",
+                            "newValue": "\"8.1.2\"",
+                            "newVersion": "8.1.2",
+                            "packageFile": "Gemfile",
+                            "updateType": "major",
+                            "packageName": "rails"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/sidekiq-8.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency sidekiq to v8",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "sidekiq",
+                            "displayPending": "",
+                            "fixedVersion": "\"6.5.0\"",
+                            "currentVersion": "6.5.0",
+                            "currentValue": "\"6.5.0\"",
+                            "newValue": "\"8.1.0\"",
+                            "newVersion": "8.1.0",
+                            "packageFile": "Gemfile",
+                            "updateType": "major",
+                            "packageName": "sidekiq"
+                        }
+                    ]
+                }
+            ],
+            "packageFiles": {
+                "bundler": [
+                    {
+                        "registryUrls": [
+                            "https://rubygems.org"
+                        ],
+                        "deps": [
+                            {
+                                "depName": "ruby",
+                                "currentValue": ">= 3.0",
+                                "datasource": "ruby-version",
+                                "registryUrls": null,
+                                "updates": [],
+                                "packageName": "ruby",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/ruby/ruby",
+                                "registryUrl": "https://www.ruby-lang.org/",
+                                "homepage": "https://www.ruby-lang.org",
+                                "currentVersion": "4.0.1",
+                                "currentVersionTimestamp": "2026-01-13T00:00:00.000Z"
+                            },
+                            {
+                                "depName": "rails",
+                                "managerData": {
+                                    "lineNumber": 5
+                                },
+                                "currentValue": "\"6.1.0\"",
+                                "datasource": "rubygems",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "6.1.7.10",
+                                        "newValue": "\"6.1.7.10\"",
+                                        "releaseTimestamp": "2024-10-23T21:59:09.257Z",
+                                        "newMajor": 6,
+                                        "newMinor": 1,
+                                        "newPatch": 7,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "8.1.2",
+                                        "newValue": "\"8.1.2\"",
+                                        "releaseTimestamp": "2026-01-08T20:18:51.400Z",
+                                        "newMajor": 8,
+                                        "newMinor": 1,
+                                        "newPatch": 2,
+                                        "updateType": "major",
+                                        "branchName": "renovate/major-ruby-on-rails-packages"
+                                    }
+                                ],
+                                "packageName": "rails",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rails/rails",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://rubyonrails.org",
+                                "changelogUrl": "https://github.com/rails/rails/releases/tag/v8.1.2",
+                                "currentVersion": "6.1.0",
+                                "currentVersionTimestamp": "2020-12-09T19:58:25.767Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"6.1.0\""
+                            },
+                            {
+                                "depName": "devise",
+                                "managerData": {
+                                    "lineNumber": 6
+                                },
+                                "currentValue": "\"4.8.0\"",
+                                "datasource": "rubygems",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "4.9.4",
+                                        "newValue": "\"4.9.4\"",
+                                        "releaseTimestamp": "2024-04-10T12:27:39.352Z",
+                                        "newMajor": 4,
+                                        "newMinor": 9,
+                                        "newPatch": 4,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "5.0.0",
+                                        "newValue": "\"5.0.0\"",
+                                        "releaseTimestamp": "2026-01-23T16:34:47.049Z",
+                                        "newMajor": 5,
+                                        "newMinor": 0,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "branchName": "renovate/devise-5.x"
+                                    }
+                                ],
+                                "packageName": "devise",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/heartcombo/devise",
+                                "registryUrl": "https://rubygems.org",
+                                "changelogUrl": "https://github.com/heartcombo/devise/blob/main/CHANGELOG.md",
+                                "currentVersion": "4.8.0",
+                                "currentVersionTimestamp": "2021-04-29T11:52:56.974Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"4.8.0\""
+                            },
+                            {
+                                "depName": "puma",
+                                "managerData": {
+                                    "lineNumber": 9
+                                },
+                                "currentValue": "\"5.6.0\"",
+                                "datasource": "rubygems",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "5.6.9",
+                                        "newValue": "\"5.6.9\"",
+                                        "newMajor": 5,
+                                        "newMinor": 6,
+                                        "newPatch": 9,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "7.2.0",
+                                        "newValue": "\"7.2.0\"",
+                                        "newMajor": 7,
+                                        "newMinor": 2,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "branchName": "renovate/puma-7.x"
+                                    }
+                                ],
+                                "packageName": "puma",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "registryUrl": "https://rubygems.org",
+                                "currentVersion": "5.6.0",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"5.6.0\""
+                            },
+                            {
+                                "depName": "sidekiq",
+                                "managerData": {
+                                    "lineNumber": 10
+                                },
+                                "currentValue": "\"6.5.0\"",
+                                "datasource": "rubygems",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "6.5.12",
+                                        "newValue": "\"6.5.12\"",
+                                        "releaseTimestamp": "2023-10-10T15:13:19.200Z",
+                                        "newMajor": 6,
+                                        "newMinor": 5,
+                                        "newPatch": 12,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "8.1.0",
+                                        "newValue": "\"8.1.0\"",
+                                        "releaseTimestamp": "2025-12-11T18:19:40.866Z",
+                                        "newMajor": 8,
+                                        "newMinor": 1,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "branchName": "renovate/sidekiq-8.x"
+                                    }
+                                ],
+                                "packageName": "sidekiq",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/sidekiq/sidekiq",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://sidekiq.org",
+                                "changelogUrl": "https://github.com/sidekiq/sidekiq/blob/main/Changes.md",
+                                "currentVersion": "6.5.0",
+                                "currentVersionTimestamp": "2022-06-07T15:58:34.852Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"6.5.0\""
+                            },
+                            {
+                                "depName": "rack",
+                                "managerData": {
+                                    "lineNumber": 11
+                                },
+                                "currentValue": "\"2.2.0\"",
+                                "datasource": "rubygems",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "2.2.21",
+                                        "newValue": "\"2.2.21\"",
+                                        "releaseTimestamp": "2025-11-02T12:19:41.697Z",
+                                        "newMajor": 2,
+                                        "newMinor": 2,
+                                        "newPatch": 21,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "3.2.4",
+                                        "newValue": "\"3.2.4\"",
+                                        "releaseTimestamp": "2025-11-02T12:41:43.631Z",
+                                        "newMajor": 3,
+                                        "newMinor": 2,
+                                        "newPatch": 4,
+                                        "updateType": "major",
+                                        "branchName": "renovate/rack-3.x"
+                                    }
+                                ],
+                                "packageName": "rack",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rack/rack",
+                                "registryUrl": "https://rubygems.org",
+                                "changelogUrl": "https://github.com/rack/rack/blob/main/CHANGELOG.md",
+                                "currentVersion": "2.2.0",
+                                "currentVersionTimestamp": "2020-02-08T18:26:43.205Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"2.2.0\""
+                            },
+                            {
+                                "depName": "rspec",
+                                "managerData": {
+                                    "lineNumber": 14
+                                },
+                                "currentValue": "\"3.11.0\"",
+                                "datasource": "rubygems",
+                                "depTypes": [
+                                    "development",
+                                    "test"
+                                ],
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "3.13.2",
+                                        "newValue": "\"3.13.2\"",
+                                        "releaseTimestamp": "2025-10-21T09:50:39.502Z",
+                                        "newMajor": 3,
+                                        "newMinor": 13,
+                                        "newPatch": 2,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    }
+                                ],
+                                "packageName": "rspec",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rspec/rspec",
+                                "registryUrl": "https://rubygems.org",
+                                "sourceDirectory": "rspec",
+                                "homepage": "https://rspec.info",
+                                "currentVersion": "3.11.0",
+                                "currentVersionTimestamp": "2022-02-09T11:40:18.879Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"3.11.0\""
+                            },
+                            {
+                                "depName": "rubocop",
+                                "managerData": {
+                                    "lineNumber": 15
+                                },
+                                "currentValue": "\"1.25.0\"",
+                                "datasource": "rubygems",
+                                "depTypes": [
+                                    "development",
+                                    "test"
+                                ],
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "1.84.1",
+                                        "newValue": "\"1.84.1\"",
+                                        "releaseTimestamp": "2026-02-02T20:11:19.136Z",
+                                        "newMajor": 1,
+                                        "newMinor": 84,
+                                        "newPatch": 1,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    }
+                                ],
+                                "packageName": "rubocop",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rubocop/rubocop",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://rubocop.org/",
+                                "changelogUrl": "https://github.com/rubocop/rubocop/releases/tag/v1.84.1",
+                                "currentVersion": "1.25.0",
+                                "currentVersionTimestamp": "2022-01-18T07:45:28.499Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "\"1.25.0\""
+                            }
+                        ],
+                        "packageFile": "Gemfile"
+                    }
+                ]
+            }
+        },
+        "rai-wtag/renov-pilot06": {
+            "problems": [],
+            "branches": [
+                {
+                    "branchName": "renovate/all-non-major-dependencies",
+                    "prNo": null,
+                    "prTitle": "Update all non-major dependencies",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "axios",
+                            "displayPending": "",
+                            "fixedVersion": "0.21.0",
+                            "currentVersion": "0.21.0",
+                            "currentValue": "0.21.0",
+                            "newValue": "0.30.2",
+                            "newVersion": "0.30.2",
+                            "packageFile": "package.json",
+                            "updateType": "minor",
+                            "packageName": "axios"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "eslint",
+                            "displayPending": "",
+                            "fixedVersion": "8.0.0",
+                            "currentVersion": "8.0.0",
+                            "currentValue": "8.0.0",
+                            "newValue": "8.57.1",
+                            "newVersion": "8.57.1",
+                            "packageFile": "package.json",
+                            "updateType": "minor",
+                            "packageName": "eslint"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "express",
+                            "displayPending": "",
+                            "fixedVersion": "4.17.0",
+                            "currentVersion": "4.17.0",
+                            "currentValue": "4.17.0",
+                            "newValue": "4.22.1",
+                            "newVersion": "4.22.1",
+                            "packageFile": "package.json",
+                            "updateType": "minor",
+                            "packageName": "express"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "jest",
+                            "displayPending": "",
+                            "fixedVersion": "27.0.0",
+                            "currentVersion": "27.0.0",
+                            "currentValue": "27.0.0",
+                            "newValue": "27.5.1",
+                            "newVersion": "27.5.1",
+                            "packageFile": "package.json",
+                            "updateType": "minor",
+                            "packageName": "jest"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "jsonwebtoken",
+                            "displayPending": "",
+                            "fixedVersion": "8.5.0",
+                            "currentVersion": "8.5.0",
+                            "currentValue": "8.5.0",
+                            "newValue": "8.5.1",
+                            "newVersion": "8.5.1",
+                            "packageFile": "package.json",
+                            "updateType": "patch",
+                            "packageName": "jsonwebtoken"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "lodash",
+                            "displayPending": "",
+                            "fixedVersion": "4.17.15",
+                            "currentVersion": "4.17.15",
+                            "currentValue": "4.17.15",
+                            "newValue": "4.17.23",
+                            "newVersion": "4.17.23",
+                            "packageFile": "package.json",
+                            "updateType": "patch",
+                            "packageName": "lodash"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "mongoose",
+                            "displayPending": "",
+                            "fixedVersion": "6.0.0",
+                            "currentVersion": "6.0.0",
+                            "currentValue": "6.0.0",
+                            "newValue": "6.13.9",
+                            "newVersion": "6.13.9",
+                            "packageFile": "package.json",
+                            "updateType": "minor",
+                            "packageName": "mongoose"
+                        },
+                        {
+                            "datasource": "npm",
+                            "depName": "nodemon",
+                            "displayPending": "",
+                            "fixedVersion": "2.0.0",
+                            "currentVersion": "2.0.0",
+                            "currentValue": "2.0.0",
+                            "newValue": "2.0.22",
+                            "newVersion": "2.0.22",
+                            "packageFile": "package.json",
+                            "updateType": "patch",
+                            "packageName": "nodemon"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/axios-1.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency axios to v1",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "axios",
+                            "displayPending": "",
+                            "fixedVersion": "0.21.0",
+                            "currentVersion": "0.21.0",
+                            "currentValue": "0.21.0",
+                            "newValue": "1.13.4",
+                            "newVersion": "1.13.4",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "axios"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/major-eslint-monorepo",
+                    "prNo": null,
+                    "prTitle": "Update dependency eslint to v10",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "eslint",
+                            "displayPending": "",
+                            "fixedVersion": "8.0.0",
+                            "currentVersion": "8.0.0",
+                            "currentValue": "8.0.0",
+                            "newValue": "10.0.0",
+                            "newVersion": "10.0.0",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "eslint"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/express-5.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency express to v5",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "express",
+                            "displayPending": "",
+                            "fixedVersion": "4.17.0",
+                            "currentVersion": "4.17.0",
+                            "currentValue": "4.17.0",
+                            "newValue": "5.2.1",
+                            "newVersion": "5.2.1",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "express"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/major-jest-monorepo",
+                    "prNo": null,
+                    "prTitle": "Update dependency jest to v30",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "jest",
+                            "displayPending": "",
+                            "fixedVersion": "27.0.0",
+                            "currentVersion": "27.0.0",
+                            "currentValue": "27.0.0",
+                            "newValue": "30.2.0",
+                            "newVersion": "30.2.0",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "jest"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/jsonwebtoken-9.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency jsonwebtoken to v9",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "jsonwebtoken",
+                            "displayPending": "",
+                            "fixedVersion": "8.5.0",
+                            "currentVersion": "8.5.0",
+                            "currentValue": "8.5.0",
+                            "newValue": "9.0.3",
+                            "newVersion": "9.0.3",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "jsonwebtoken"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/mongoose-9.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency mongoose to v9",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "mongoose",
+                            "displayPending": "",
+                            "fixedVersion": "6.0.0",
+                            "currentVersion": "6.0.0",
+                            "currentValue": "6.0.0",
+                            "newValue": "9.1.6",
+                            "newVersion": "9.1.6",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "mongoose"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/nodemon-3.x",
+                    "prNo": null,
+                    "prTitle": "Update dependency nodemon to v3",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "npm",
+                            "depName": "nodemon",
+                            "displayPending": "",
+                            "fixedVersion": "2.0.0",
+                            "currentVersion": "2.0.0",
+                            "currentValue": "2.0.0",
+                            "newValue": "3.1.11",
+                            "newVersion": "3.1.11",
+                            "packageFile": "package.json",
+                            "updateType": "major",
+                            "packageName": "nodemon"
+                        }
+                    ]
+                }
+            ],
+            "packageFiles": {
+                "npm": [
+                    {
+                        "deps": [
+                            {
+                                "depType": "dependencies",
+                                "depName": "express",
+                                "currentValue": "4.17.0",
+                                "datasource": "npm",
+                                "prettyDepType": "dependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "4.22.1",
+                                        "newValue": "4.22.1",
+                                        "releaseTimestamp": "2025-12-01T20:50:41.122Z",
+                                        "newMajor": 4,
+                                        "newMinor": 22,
+                                        "newPatch": 1,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "5.2.1",
+                                        "newValue": "5.2.1",
+                                        "releaseTimestamp": "2025-12-01T20:49:43.268Z",
+                                        "newMajor": 5,
+                                        "newMinor": 2,
+                                        "newPatch": 1,
+                                        "updateType": "major",
+                                        "branchName": "renovate/express-5.x"
+                                    }
+                                ],
+                                "packageName": "express",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/expressjs/express",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://expressjs.com/",
+                                "currentVersion": "4.17.0",
+                                "currentVersionTimestamp": "2019-05-17T01:57:40.690Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "4.17.0"
+                            },
+                            {
+                                "depType": "dependencies",
+                                "depName": "lodash",
+                                "currentValue": "4.17.15",
+                                "datasource": "npm",
+                                "prettyDepType": "dependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "4.17.23",
+                                        "newValue": "4.17.23",
+                                        "releaseTimestamp": "2026-01-21T17:29:52.831Z",
+                                        "newMajor": 4,
+                                        "newMinor": 17,
+                                        "newPatch": 23,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    }
+                                ],
+                                "packageName": "lodash",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/lodash/lodash",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://lodash.com/",
+                                "currentVersion": "4.17.15",
+                                "currentVersionTimestamp": "2019-07-19T02:28:46.584Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "4.17.15"
+                            },
+                            {
+                                "depType": "dependencies",
+                                "depName": "axios",
+                                "currentValue": "0.21.0",
+                                "datasource": "npm",
+                                "prettyDepType": "dependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "0.30.2",
+                                        "newValue": "0.30.2",
+                                        "releaseTimestamp": "2025-09-27T10:29:01.127Z",
+                                        "newMajor": 0,
+                                        "newMinor": 30,
+                                        "newPatch": 2,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "1.13.4",
+                                        "newValue": "1.13.4",
+                                        "releaseTimestamp": "2026-01-27T18:18:38.613Z",
+                                        "newMajor": 1,
+                                        "newMinor": 13,
+                                        "newPatch": 4,
+                                        "updateType": "major",
+                                        "branchName": "renovate/axios-1.x"
+                                    }
+                                ],
+                                "packageName": "axios",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/axios/axios",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://axios-http.com",
+                                "currentVersion": "0.21.0",
+                                "currentVersionTimestamp": "2020-10-23T16:27:13.883Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "0.21.0"
+                            },
+                            {
+                                "depType": "dependencies",
+                                "depName": "mongoose",
+                                "currentValue": "6.0.0",
+                                "datasource": "npm",
+                                "prettyDepType": "dependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "6.13.9",
+                                        "newValue": "6.13.9",
+                                        "releaseTimestamp": "2026-02-04T18:59:43.752Z",
+                                        "newMajor": 6,
+                                        "newMinor": 13,
+                                        "newPatch": 9,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "9.1.6",
+                                        "newValue": "9.1.6",
+                                        "releaseTimestamp": "2026-02-04T20:32:11.605Z",
+                                        "newMajor": 9,
+                                        "newMinor": 1,
+                                        "newPatch": 6,
+                                        "updateType": "major",
+                                        "branchName": "renovate/mongoose-9.x"
+                                    }
+                                ],
+                                "packageName": "mongoose",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/Automattic/mongoose",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://mongoosejs.com",
+                                "currentVersion": "6.0.0",
+                                "currentVersionTimestamp": "2021-08-24T22:12:24.222Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "6.0.0"
+                            },
+                            {
+                                "depType": "dependencies",
+                                "depName": "jsonwebtoken",
+                                "currentValue": "8.5.0",
+                                "datasource": "npm",
+                                "prettyDepType": "dependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "8.5.1",
+                                        "newValue": "8.5.1",
+                                        "releaseTimestamp": "2019-03-18T12:07:37.715Z",
+                                        "newMajor": 8,
+                                        "newMinor": 5,
+                                        "newPatch": 1,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "9.0.3",
+                                        "newValue": "9.0.3",
+                                        "releaseTimestamp": "2025-12-04T10:27:57.257Z",
+                                        "newMajor": 9,
+                                        "newMinor": 0,
+                                        "newPatch": 3,
+                                        "updateType": "major",
+                                        "branchName": "renovate/jsonwebtoken-9.x"
+                                    }
+                                ],
+                                "packageName": "jsonwebtoken",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/auth0/node-jsonwebtoken",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "currentVersion": "8.5.0",
+                                "currentVersionTimestamp": "2019-02-20T13:42:50.904Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "8.5.0"
+                            },
+                            {
+                                "depType": "devDependencies",
+                                "depName": "jest",
+                                "currentValue": "27.0.0",
+                                "datasource": "npm",
+                                "prettyDepType": "devDependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "27.5.1",
+                                        "newValue": "27.5.1",
+                                        "releaseTimestamp": "2022-02-08T10:52:53.070Z",
+                                        "newMajor": 27,
+                                        "newMinor": 5,
+                                        "newPatch": 1,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "30.2.0",
+                                        "newValue": "30.2.0",
+                                        "releaseTimestamp": "2025-09-28T07:33:12.181Z",
+                                        "newMajor": 30,
+                                        "newMinor": 2,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "branchName": "renovate/major-jest-monorepo"
+                                    }
+                                ],
+                                "packageName": "jest",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/jestjs/jest",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "sourceDirectory": "packages/jest",
+                                "homepage": "https://jestjs.io/",
+                                "currentVersion": "27.0.0",
+                                "currentVersionTimestamp": "2021-05-25T08:16:14.300Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "27.0.0"
+                            },
+                            {
+                                "depType": "devDependencies",
+                                "depName": "eslint",
+                                "currentValue": "8.0.0",
+                                "datasource": "npm",
+                                "prettyDepType": "devDependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "8.57.1",
+                                        "newValue": "8.57.1",
+                                        "releaseTimestamp": "2024-09-16T15:20:44.208Z",
+                                        "newMajor": 8,
+                                        "newMinor": 57,
+                                        "newPatch": 1,
+                                        "updateType": "minor",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "10.0.0",
+                                        "newValue": "10.0.0",
+                                        "releaseTimestamp": "2026-02-06T22:30:47.920Z",
+                                        "newMajor": 10,
+                                        "newMinor": 0,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "branchName": "renovate/major-eslint-monorepo"
+                                    }
+                                ],
+                                "packageName": "eslint",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/eslint/eslint",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://eslint.org",
+                                "currentVersion": "8.0.0",
+                                "currentVersionTimestamp": "2021-10-09T20:46:13.874Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "8.0.0"
+                            },
+                            {
+                                "depType": "devDependencies",
+                                "depName": "nodemon",
+                                "currentValue": "2.0.0",
+                                "datasource": "npm",
+                                "prettyDepType": "devDependency",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "2.0.22",
+                                        "newValue": "2.0.22",
+                                        "releaseTimestamp": "2023-03-22T19:53:09.771Z",
+                                        "newMajor": 2,
+                                        "newMinor": 0,
+                                        "newPatch": 22,
+                                        "updateType": "patch",
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "3.1.11",
+                                        "newValue": "3.1.11",
+                                        "releaseTimestamp": "2025-11-11T16:13:19.272Z",
+                                        "newMajor": 3,
+                                        "newMinor": 1,
+                                        "newPatch": 11,
+                                        "updateType": "major",
+                                        "branchName": "renovate/nodemon-3.x"
+                                    }
+                                ],
+                                "packageName": "nodemon",
+                                "versioning": "npm",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/remy/nodemon",
+                                "registryUrl": "https://registry.npmjs.org",
+                                "homepage": "https://nodemon.io",
+                                "currentVersion": "2.0.0",
+                                "currentVersionTimestamp": "2019-11-20T15:24:59.854Z",
+                                "isSingleVersion": true,
+                                "fixedVersion": "2.0.0"
+                            }
+                        ],
+                        "extractedConstraints": {},
+                        "packageFileVersion": "1.0.0",
+                        "managerData": {
+                            "packageJsonName": "renov-pilot06",
+                            "hasPackageManager": false,
+                            "yarnZeroInstall": false
+                        },
+                        "skipInstalls": true,
+                        "packageFile": "package.json"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "platform": "azure",
+  "endpoint": "https://dev.azure.com",
+  "repositories": [
+  ]
+}

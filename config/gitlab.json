@@ -1,0 +1,6 @@
+{
+  "platform": "gitlab",
+  "endpoint": "https://gitlab.com/api/v4",
+  "repositories": [
+  ]
+}
