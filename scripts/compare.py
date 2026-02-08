@@ -59,7 +59,7 @@ def compare(old_path, new_path):
         print("-" * 45)
         
         if added:
-            print("  🆕 NEW dependencies:")
+            print("NEW dependencies:")
             for name, ver in sorted(added.items()):
                 print(f"     + {name} @ {ver}")
         
@@ -124,20 +124,20 @@ if __name__ == "__main__":
 #     added = new_deps - old_deps
 #     removed = old_deps - new_deps
     
-#     print(f"\n📦 {repo}")
+#     print(f"\n {repo}")
 #     print("-" * 40)
     
 #     if added:
-#         print("  🆕 NEW:")
+#         print("   NEW:")
 #         for d in sorted(added):
 #             print(f"     + {d}")
     
 #     if removed:
-#         print("  ❌ REMOVED:")
+#         print("   REMOVED:")
 #         for d in sorted(removed):
 #             print(f"     - {d}")
     
 #     if not added and not removed:
-#         print("  ✅ No changes")
+#         print("   No changes")
 
 # print("\n" + "=" * 50 + "\n")
