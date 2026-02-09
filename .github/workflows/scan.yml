@@ -71,7 +71,7 @@ jobs:
         with:
           name: scan-report-${{ steps.vars.outputs.timestamp }}
           path: reports/latest/scan-report.json
-          retention-days: 400
+          retention-days: 90
 
       - name: Upload new baseline
         uses: actions/upload-artifact@v4
@@ -79,4 +79,4 @@ jobs:
           name: scan-baseline
           path: reports/latest/github.json
           overwrite: true
-          retention-days: 400
+          retention-days: 90
