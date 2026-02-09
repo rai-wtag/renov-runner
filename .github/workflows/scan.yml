@@ -2,29 +2,23 @@ name: Daily Dependency Scan
 
 on:
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   scan:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Renovate
-        run: npm install -g renovate
+      - run: npm install -g renovate
 
       - name: Set timestamp
         id: vars
@@ -32,17 +26,27 @@ jobs:
           TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
           echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
 
-      - name: Create directories
-        run: |
-          mkdir -p reports/latest
-          mkdir -p reports/history/${{ steps.vars.outputs.timestamp }}
+      - run: mkdir -p reports/latest reports/previous
 
-      - name: Read repo list from config
+      - name: Download previous baseline
+        uses: actions/download-artifact@v4
+        with:
+          name: scan-baseline
+          path: reports/previous/
+        continue-on-error: true
+
+      - name: Ensure baseline exists
+        run: |
+          if [ ! -f reports/previous/github.json ]; then
+            echo '{"repositories":{}}' > reports/previous/github.json
+            echo "First run — no previous baseline found."
+          fi
+
+      - name: Read repo list
         id: repos
         run: |
           REPOS=$(cat config/github.json | jq -r '.repositories | join(" ")')
           echo "list=$REPOS" >> "$GITHUB_OUTPUT"
-          echo "Scanning repos: $REPOS"
 
       - name: Run Renovate scan
         env:
@@ -55,27 +59,24 @@ jobs:
             --report-path=reports/latest/github.json \
             ${{ steps.repos.outputs.list }}
 
-      - name: Compare with previous
+      - name: Generate report
         run: |
-          echo ""
-          echo "════════════════════════════════════════════"
           python3 scripts/compare.py \
             reports/previous/github.json \
-            reports/latest/github.json
-          echo "════════════════════════════════════════════"
+            reports/latest/github.json \
+            reports/latest/scan-report.json
 
-      - name: Update baseline
-        run: |
-          cp reports/latest/github.json reports/previous/github.json
+      - name: Upload scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-report-${{ steps.vars.outputs.timestamp }}
+          path: reports/latest/scan-report.json
+          retention-days: 400
 
-      - name: Archive to history
-        run: |
-          cp reports/latest/github.json reports/history/${{ steps.vars.outputs.timestamp }}/github.json
-
-      - name: Commit and push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/
-          git diff --cached --quiet || git commit -m "scan ${{ steps.vars.outputs.timestamp }}"
-          git push
+      - name: Upload new baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-baseline
+          path: reports/latest/github.json
+          overwrite: true
+          retention-days: 400

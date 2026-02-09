@@ -1,143 +1,207 @@
 import json
 import sys
 import os
+from datetime import datetime
 
 def load_report(filepath):
     if not os.path.exists(filepath):
-        print(f"No previous report found: {filepath}")
-        print(f"First run")
         return {"repositories": {}}
-    
-    with open(filepath) as f:
-        return json.load(f)
+    try:
+        with open(filepath) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {"repositories": {}}
+
 
 def extract_deps(report):
     result = {}
-    for repo, info in report.get("repositories", {}).items():
+    repos = report.get("repositories", {})
+
+    for repo_name, repo_data in repos.items():
         deps = {}
-        for manager, files in info.get("packageFiles", {}).items():
-            for f in files:
-                for dep in f.get("deps", []):
-                    name = dep.get("depName")
-                    version = dep.get("currentValue", "unknown")
-                    deps[name] = version
-        result[repo] = deps
+        package_files = repo_data.get("packageFiles", {})
+
+        for manager, files in package_files.items():
+            for file_info in files:
+                package_file = file_info.get("packageFile", "unknown")
+
+                for dep in file_info.get("deps", []):
+                    dep_name = dep.get("depName")
+                    if not dep_name:
+                        continue
+
+                    current_value = dep.get("currentValue", "unknown")
+                    raw_updates = dep.get("updates", [])
+
+                    latest_version = None
+                    update_type = None
+
+                    for upd in raw_updates:
+                        t = upd.get("updateType")
+                        v = upd.get("newVersion")
+                        if not v:
+                            continue
+                        if t == "major":
+                            update_type = "major"
+                            latest_version = v
+                        elif t == "minor" and update_type != "major":
+                            update_type = "minor"
+                            latest_version = v
+                        elif t == "patch" and update_type not in ("major", "minor"):
+                            update_type = "patch"
+                            latest_version = v
+
+                    deps[dep_name] = {
+                        "version": current_value,
+                        "manager": manager,
+                        "file": package_file,
+                        "latestVersion": latest_version,
+                        "updateType": update_type,
+                    }
+
+        result[repo_name] = deps
     return result
 
-def compare(old_path, new_path):
-    old_report = load_report(old_path)
-    new_report = load_report(new_path)
-    
-    old_deps = extract_deps(old_report)
-    new_deps = extract_deps(new_report)
-    
-    print("\n" + "=" * 55)
-    print("  DEPENDENCY CHANGE REPORT")
-    print("=" * 55)
-    
-    total_added = 0
-    total_removed = 0
-    total_changed = 0
-    
+
+def find_changes(old_deps, new_deps):
+    changes = {
+        "totals": {"added": 0, "removed": 0, "versionChanged": 0},
+        "details": {}
+    }
+
     for repo in sorted(new_deps.keys()):
         old_repo = old_deps.get(repo, {})
         new_repo = new_deps[repo]
-        
-        added = {k: v for k, v in new_repo.items() if k not in old_repo}
-        removed = {k: v for k, v in old_repo.items() if k not in new_repo}
-        changed = {
-            k: {"old": old_repo[k], "new": new_repo[k]}
-            for k in new_repo
-            if k in old_repo and old_repo[k] != new_repo[k]
+
+        added = []
+        removed = []
+        version_changed = []
+
+        for name in sorted(new_repo.keys()):
+            if name not in old_repo:
+                info = new_repo[name]
+                added.append({
+                    "name": name,
+                    "version": info["version"],
+                    "latestVersion": info["latestVersion"],
+                    "updateType": info["updateType"],
+                })
+
+        for name in sorted(old_repo.keys()):
+            if name not in new_repo:
+                info = old_repo[name]
+                removed.append({
+                    "name": name,
+                    "version": info["version"],
+                })
+
+        for name in sorted(new_repo.keys()):
+            if name in old_repo:
+                if old_repo[name]["version"] != new_repo[name]["version"]:
+                    version_changed.append({
+                        "name": name,
+                        "previousVersion": old_repo[name]["version"],
+                        "currentVersion": new_repo[name]["version"],
+                        "latestVersion": new_repo[name]["latestVersion"],
+                        "updateType": new_repo[name]["updateType"],
+                    })
+
+        changes["totals"]["added"] += len(added)
+        changes["totals"]["removed"] += len(removed)
+        changes["totals"]["versionChanged"] += len(version_changed)
+
+        if added or removed or version_changed:
+            changes["details"][repo] = {}
+            if added:
+                changes["details"][repo]["added"] = added
+            if removed:
+                changes["details"][repo]["removed"] = removed
+            if version_changed:
+                changes["details"][repo]["versionChanged"] = version_changed
+
+    return changes
+
+
+def build_report(new_deps, changes):
+    report = {
+        "generatedAt": datetime.now().isoformat(),
+        "overview": {
+            "repositoriesScanned": len(new_deps),
+            "totalDependencies": 0,
+            "updatesAvailable": {"patch": 0, "minor": 0, "major": 0}
+        },
+        "changes": changes["totals"],
+        "repositories": {}
+    }
+
+    for repo_name in sorted(new_deps.keys()):
+        deps = new_deps[repo_name]
+        manager = None
+        file = None
+        dep_list = []
+
+        for name in sorted(deps.keys()):
+            info = deps[name]
+            if manager is None:
+                manager = info["manager"]
+            if file is None:
+                file = info["file"]
+
+            report["overview"]["totalDependencies"] += 1
+
+            if info["updateType"] == "patch":
+                report["overview"]["updatesAvailable"]["patch"] += 1
+            elif info["updateType"] == "minor":
+                report["overview"]["updatesAvailable"]["minor"] += 1
+            elif info["updateType"] == "major":
+                report["overview"]["updatesAvailable"]["major"] += 1
+
+            dep_list.append({
+                "name": name,
+                "currentVersion": info["version"],
+                "latestVersion": info["latestVersion"],
+                "updateType": info["updateType"],
+            })
+
+        report["repositories"][repo_name] = {
+            "manager": manager,
+            "file": file,
+            "dependencies": dep_list,
         }
-        
-        total_added += len(added)
-        total_removed += len(removed)
-        total_changed += len(changed)
-        
-        print(f"\n{repo}")
-        print("-" * 45)
-        
-        if added:
-            print("NEW dependencies:")
-            for name, ver in sorted(added.items()):
-                print(f"     + {name} @ {ver}")
-        
-        if removed:
-            print("REMOVED dependencies:")
-            for name, ver in sorted(removed.items()):
-                print(f"     - {name} @ {ver}")
-        
-        if changed:
-            print("VERSION changed:")
-            for name, vers in sorted(changed.items()):
-                print(f"     ~ {name}: {vers['old']} → {vers['new']}")
-        
-        if not added and not removed and not changed:
-            print("No changes")
-    
-    # Summary
-    print("\n" + "=" * 55)
-    print("  SUMMARY")
-    print("=" * 55)
-    print(f"  New:     {total_added}")
-    print(f"  Removed: {total_removed}")
-    print(f"  Changed: {total_changed}")
-    print("=" * 55 + "\n")
+
+    if changes["details"]:
+        report["changeDetails"] = changes["details"]
+
+    return report
+
+
+def main():
+    if len(sys.argv) != 4:
+        print("Usage: python3 scripts/compare.py <previous.json> <latest.json> <output.json>")
+        sys.exit(1)
+
+    old_path = sys.argv[1]
+    new_path = sys.argv[2]
+    output_path = sys.argv[3]
+
+    old_report = load_report(old_path)
+    new_report = load_report(new_path)
+
+    old_deps = extract_deps(old_report)
+    new_deps = extract_deps(new_report)
+
+    changes = find_changes(old_deps, new_deps)
+    report = build_report(new_deps, changes)
+
+    with open(output_path, "w") as f:
+        json.dump(report, f, indent=2)
+
+    print(f"Repositories: {report['overview']['repositoriesScanned']}")
+    print(f"Dependencies: {report['overview']['totalDependencies']}")
+    print(f"Updates — patch: {report['overview']['updatesAvailable']['patch']}, minor: {report['overview']['updatesAvailable']['minor']}, major: {report['overview']['updatesAvailable']['major']}")
+    print(f"Changes — added: {changes['totals']['added']}, removed: {changes['totals']['removed']}, changed: {changes['totals']['versionChanged']}")
+    print(f"Saved: {output_path}")
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python3 scripts/compare.py <previous.json> <latest.json>")
-        sys.exit(1)
-    
-    compare(sys.argv[1], sys.argv[2])
-
-
-# import json
-# import sys
-
-# def get_deps(filepath):
-#     with open(filepath) as f:
-#         data = json.load(f)
-    
-#     result = {}
-#     for repo, info in data.get("repositories", {}).items():
-#         deps = set()
-#         for manager, files in info.get("packageFiles", {}).items():
-#             for f in files:
-#                 for dep in f.get("deps", []):
-#                     deps.add(dep.get("depName"))
-#         result[repo] = deps
-#     return result
-
-# old = get_deps(sys.argv[1])
-# new = get_deps(sys.argv[2])
-
-# print("\n" + "=" * 50)
-# print("  DEPENDENCY CHANGES DETECTED")
-# print("=" * 50)
-
-# for repo in new:
-#     old_deps = old.get(repo, set())
-#     new_deps = new[repo]
-    
-#     added = new_deps - old_deps
-#     removed = old_deps - new_deps
-    
-#     print(f"\n {repo}")
-#     print("-" * 40)
-    
-#     if added:
-#         print("   NEW:")
-#         for d in sorted(added):
-#             print(f"     + {d}")
-    
-#     if removed:
-#         print("   REMOVED:")
-#         for d in sorted(removed):
-#             print(f"     - {d}")
-    
-#     if not added and not removed:
-#         print("   No changes")
-
-# print("\n" + "=" * 50 + "\n")
+    main()
