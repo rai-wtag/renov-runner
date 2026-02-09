@@ -1,72 +1,81 @@
-name: Renovate Multi‑Repo Scan
+name: Daily Dependency Scan
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   scan:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout workflow repo
+      - name: Checkout main branch
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          ref: main
+          path: main
 
-      - name: Install Renovate
-        run: npm install -g renovate
-
-      - name: Create report dirs
-        run: mkdir -p reports/latest reports/previous
-
-      - name: Restore baseline cache
-        uses: actions/cache@v4
+      - name: Checkout data branch
+        uses: actions/checkout@v4
         with:
-          path: reports/previous
-          key: renovate-baseline-v1
-          restore-keys: renovate-baseline-v1
+          ref: data
+          path: data
 
-      # Loop over all repos and scan them one by one
-      - name: Run Renovate for each repo
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install -g renovate
+
+      - name: Set timestamp
+        id: vars
         run: |
-          REPO_LIST=$(jq -r '.repositories | join(" ")' config/github.json)
-          echo "Repos to scan: $REPO_LIST"
-          for repo in $REPO_LIST; do
-            SHORT=$(echo "$repo" | sed 's/\//_/g')
+          TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          LABEL=$(date -u +%Y-%m-%d_%H%M%S)
+          echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
+          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
 
-            echo "Checking out $repo"
-            # Checkout each repo into its own folder using your PAT
-            gh auth setup-git
-            git config --global url."https://${{ secrets.PAT }}:@github.com/".insteadOf "https://github.com/"
-            git clone "https://github.com/${repo}.git" "repos/${SHORT}"
+      - name: Read repo list
+        id: repos
+        run: |
+          REPOS=$(cat main/config/github.json | jq -r '.repositories | join(" ")')
+          echo "list=$REPOS" >> "$GITHUB_OUTPUT"
 
-            echo "Running Renovate in repos/${SHORT}"
-            (
-              cd "repos/${SHORT}"
-              renovate --dry-run --platform=github --report-type=file --report-path=../../reports/latest/${SHORT}.json
-            )
-          done
+      - name: Run Renovate scan
+        env:
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+        run: |
+          mkdir -p main/reports
+          renovate \
+            --platform=github \
+            --dry-run=full \
+            --report-type=file \
+            --report-path=main/reports/latest.json \
+            ${{ steps.repos.outputs.list }}
 
-      - name: Compare all scans
-        run: python3 scripts/compare.py
-
-      - name: Upload combined report
-        uses: actions/upload-artifact@v4
-        with:
-          name: scan-report-${{ github.run_id }}
-          path: reports/latest/scan-report.json
+      - name: Generate report
+        run: |
+          python3 main/scripts/compare.py \
+            data/baseline.json \
+            main/reports/latest.json \
+            main/reports/scan-report.json
 
       - name: Update baseline
         run: |
-          cp reports/latest/*.json reports/previous/
+          cp main/reports/latest.json data/baseline.json
+          cd data
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add baseline.json
+          git diff --cached --quiet || git commit -m "baseline ${{ steps.vars.outputs.timestamp }}"
+          git push origin data
 
-      - name: Save new baseline cache
-        uses: actions/cache@v4
+      - name: Upload scan report
+        uses: actions/upload-artifact@v4
         with:
-          path: reports/previous
-          key: renovate-baseline-v1
+          name: scan-report-${{ steps.vars.outputs.label }}
+          path: main/reports/scan-report.json
+          retention-days: 90
