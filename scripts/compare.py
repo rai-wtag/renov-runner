@@ -1,208 +1,63 @@
 import json
-import sys
 import os
-from datetime import datetime
 
-def load_report(filepath):
-    # return empty structure if missing or invalid.
-    if not os.path.exists(filepath):
-        return {"repositories": {}}
-    try:
-        with open(filepath) as f:
-            return json.load(f)
-    except (json.JSONDecodeError, IOError):
-        return {"repositories": {}}
+LATEST_DIR = "reports/latest"
+PREV_DIR = "reports/previous"
+OUTPUT_FILE = os.path.join(LATEST_DIR, "scan-report.json")
 
-def extract_deps(report):
-    result = {}
-    repos = report.get("repositories", {})
+with open("config/github.json") as f:
+    repos = json.load(f).get("repositories", [])
 
-    for repo_name, repo_data in repos.items():
-        deps = {}
-        package_files = repo_data.get("packageFiles", {})
+final_report = {"repositories": {}}
 
-        for manager, files in package_files.items():
-            for file_info in files:
-                package_file = file_info.get("packageFile", "unknown")
+for repo in repos:
+    latest_file = os.path.join(LATEST_DIR, f"{repo}.json")
+    prev_file = os.path.join(PREV_DIR, f"{repo}.json")
 
-                for dep in file_info.get("deps", []):
-                    dep_name = dep.get("depName")
-                    if not dep_name:
-                        continue
+    if not os.path.exists(latest_file):
+        print(f"[WARN] Latest scan not found for repo {repo}, skipping.")
+        continue
 
-                    current_value = dep.get("currentValue", "unknown")
-                    raw_updates = dep.get("updates", [])
+    with open(latest_file) as f:
+        latest = json.load(f)
 
-                    # priority: (major > minor > patch)
-                    latest_version = None
-                    update_type = None
-                    for upd in raw_updates:
-                        t = upd.get("updateType")
-                        v = upd.get("newVersion")
-                        if not v:
-                            continue
-                        if t == "major":
-                            update_type = "major"
-                            latest_version = v
-                        elif t == "minor" and update_type != "major":
-                            update_type = "minor"
-                            latest_version = v
-                        elif t == "patch" and update_type not in ("major", "minor"):
-                            update_type = "patch"
-                            latest_version = v
+    if os.path.exists(prev_file):
+        with open(prev_file) as f:
+            previous = json.load(f)
+    else:
+        previous = {"dependencies": {}}
 
-                    deps[dep_name] = {
-                        "version": current_value,
-                        "manager": manager,
-                        "file": package_file,
-                        "latestVersion": latest_version,
-                        "updateType": update_type,
-                    }
+    latest_deps = latest.get("dependencies", {})
+    prev_deps = previous.get("dependencies", {})
 
-        result[repo_name] = deps
-    return result
+    changed = {}
+    added = []
+    removed = []
 
-def find_changes(old_deps, new_deps):
-    changes = {
-        "totals": {"added": 0, "removed": 0, "versionChanged": 0},
-        "details": {}
+    for dep, latest_ver in latest_deps.items():
+        prev_ver = prev_deps.get(dep)
+        if prev_ver is None:
+            added.append(dep)
+        elif prev_ver != latest_ver:
+            changed[dep] = {"previous": prev_ver, "latest": latest_ver}
+
+    for dep in prev_deps:
+        if dep not in latest_deps:
+            removed.append(dep)
+
+    final_report["repositories"][repo] = {
+        "total_dependencies": len(latest_deps),
+        "changed_dependencies": changed,
+        "added_dependencies": added,
+        "removed_dependencies": removed
     }
 
-    for repo in sorted(new_deps.keys()):
-        old_repo = old_deps.get(repo, {})
-        new_repo = new_deps[repo]
+    os.makedirs(PREV_DIR, exist_ok=True)
+    with open(prev_file, "w") as f:
+        json.dump(latest, f, indent=2)
 
-        added = []
-        removed = []
-        version_changed = []
+os.makedirs(LATEST_DIR, exist_ok=True)
+with open(OUTPUT_FILE, "w") as f:
+    json.dump(final_report, f, indent=2)
 
-        # added deps
-        for name in sorted(new_repo.keys()):
-            if name not in old_repo:
-                info = new_repo[name]
-                added.append({
-                    "name": name,
-                    "version": info["version"],
-                    "latestVersion": info["latestVersion"],
-                    "updateType": info["updateType"],
-                })
-
-        # removed dep
-        for name in sorted(old_repo.keys()):
-            if name not in new_repo:
-                info = old_repo[name]
-                removed.append({
-                    "name": name,
-                    "version": info["version"],
-                })
-
-        # version changes (only if version actually changed)
-        for name in sorted(new_repo.keys()):
-            if name in old_repo:
-                if old_repo[name]["version"] != new_repo[name]["version"]:
-                    version_changed.append({
-                        "name": name,
-                        "previousVersion": old_repo[name]["version"],
-                        "currentVersion": new_repo[name]["version"],
-                        "latestVersion": new_repo[name]["latestVersion"],
-                        "updateType": new_repo[name]["updateType"],
-                    })
-
-        # totals
-        changes["totals"]["added"] += len(added)
-        changes["totals"]["removed"] += len(removed)
-        changes["totals"]["versionChanged"] += len(version_changed)
-
-        # per-repo changes if any
-        if added or removed or version_changed:
-            changes["details"][repo] = {}
-            if added:
-                changes["details"][repo]["added"] = added
-            if removed:
-                changes["details"][repo]["removed"] = removed
-            if version_changed:
-                changes["details"][repo]["versionChanged"] = version_changed
-
-    return changes
-
-def build_report(new_deps, changes):
-    report = {
-        "generatedAt": datetime.now().isoformat(),
-        "overview": {
-            "repositoriesScanned": len(new_deps),
-            "totalDependencies": 0,
-            "updatesAvailable": {"patch": 0, "minor": 0, "major": 0}
-        },
-        "changes": changes["totals"],
-        "repositories": {}
-    }
-
-    for repo_name in sorted(new_deps.keys()):
-        deps = new_deps[repo_name]
-        manager = None
-        file = None
-        dep_list = []
-
-        for name in sorted(deps.keys()):
-            info = deps[name]
-            if manager is None:
-                manager = info["manager"]
-            if file is None:
-                file = info["file"]
-
-            report["overview"]["totalDependencies"] += 1
-
-            if info["updateType"] == "patch":
-                report["overview"]["updatesAvailable"]["patch"] += 1
-            elif info["updateType"] == "minor":
-                report["overview"]["updatesAvailable"]["minor"] += 1
-            elif info["updateType"] == "major":
-                report["overview"]["updatesAvailable"]["major"] += 1
-
-            dep_list.append({
-                "name": name,
-                "currentVersion": info["version"],
-                "latestVersion": info["latestVersion"],
-                "updateType": info["updateType"],
-            })
-
-        report["repositories"][repo_name] = {
-            "manager": manager,
-            "file": file,
-            "dependencies": dep_list,
-        }
-
-    if changes["details"]:
-        report["changeDetails"] = changes["details"]
-
-    return report
-
-def main():
-    if len(sys.argv) != 4:
-        print("Usage: python3 scripts/compare.py <previous.json> <latest.json> <output.json>")
-        sys.exit(1)
-
-    old_path = sys.argv[1]
-    new_path = sys.argv[2]
-    output_path = sys.argv[3]
-
-    old_report = load_report(old_path)
-    new_report = load_report(new_path)
-
-    old_deps = extract_deps(old_report)
-    new_deps = extract_deps(new_report)
-
-    changes = find_changes(old_deps, new_deps)
-    report = build_report(new_deps, changes)
-
-    with open(output_path, "w") as f:
-        json.dump(report, f, indent=2)
-
-    print(f"Repositories: {report['overview']['repositoriesScanned']}")
-    print(f"Dependencies: {report['overview']['totalDependencies']}")
-    print(f"Updates — patch: {report['overview']['updatesAvailable']['patch']}, minor: {report['overview']['updatesAvailable']['minor']}, major: {report['overview']['updatesAvailable']['major']}")
-    print(f"Changes — added: {changes['totals']['added']}, removed: {changes['totals']['removed']}, changed: {changes['totals']['versionChanged']}")
-    print(f"Saved: {output_path}")
-
-if __name__ == "__main__":
-    main()
+print(f"Saved multi-repo scan report to {OUTPUT_FILE}")

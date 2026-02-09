@@ -1,93 +1,45 @@
-name: Daily Dependency Scan
+name: Renovate Multi-Repo Scan
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: renovate-scan
-  cancel-in-progress: true
+  schedule:
+    - cron: '0 1 * * *' 
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - run: npm install -g renovate
+      - name: Install Renovate
+        run: npm install -g renovate
 
-      - name: Set timestamp
-        id: vars
+      - name: Prepare report directories
         run: |
-          TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
-          echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
+          mkdir -p reports/latest reports/previous
 
-      - run: mkdir -p reports/latest reports/previous
-
-      # restore the baseline cache (if exists)
-      - name: Restore baseline cache
-        uses: actions/cache@v4
-        with:
-          path: reports/previous/github.json
-          key: renovate-baseline-v1
-
-      # ensure baseline file exists
-      - name: Ensure baseline exists
+      - name: Run Renovate for each repo
         run: |
-          if [ ! -f reports/previous/github.json ]; then
-            echo '{"repositories":{}}' > reports/previous/github.json
-            echo "First run — no previous baseline found."
-          fi
+          for repo in $(jq -r '.repositories | join(" ")' config/github.json); do
+            echo "Scanning $repo..."
+            renovate --dry-run --repository=$repo --log-level info
+            # Move latest scan to repo-specific file
+            if [ -f reports/latest/github.json ]; then
+              mv reports/latest/github.json reports/latest/${repo}.json
+            fi
+          done
 
-      - name: Read repo list
-        id: repos
-        run: |
-          REPOS=$(cat config/github.json | jq -r '.repositories | join(" ")')
-          echo "list=$REPOS" >> "$GITHUB_OUTPUT"
+      - name: Compare scans and generate report
+        run: python3 scripts/compare.py
 
-      - name: Run Renovate scan
-        env:
-          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
-        run: |
-          renovate \
-            --platform=github \
-            --dry-run=full \
-            --report-type=file \
-            --report-path=reports/latest/github.json \
-            ${{ steps.repos.outputs.list }}
-
-      - name: Generate report
-        run: |
-          python3 scripts/compare.py \
-            reports/previous/github.json \
-            reports/latest/github.json \
-            reports/latest/scan-report.json
-
-      - name: Upload scan report
+      - name: Upload scan artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scan-report-${{ steps.vars.outputs.timestamp }}
+          name: scan-report-${{ github.run_id }}
           path: reports/latest/scan-report.json
-          retention-days: 90
-
-      # update baseline for the next run
-      - name: Update baseline for next run
-        run: |
-          cp reports/latest/github.json reports/previous/github.json
-
-      # cache the new baseline for next run
-      - name: Cache new baseline
-        uses: actions/cache@v4
-        with:
-          path: reports/previous/github.json
-          key: renovate-baseline-v1
-          save-on-error: true
-          save-always: true
