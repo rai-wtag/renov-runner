@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import json
 import sys
 import os
@@ -192,16 +190,115 @@ def build_report(new_deps, changes, timestamp):
     return report
 
 
+def generate_summary(report):
+    lines = []
+    overview = report["overview"]
+    changes = report["changes"]
+
+    lines.append("# 📦 Dependency Scan Report")
+    lines.append("")
+    lines.append(f"**Generated:** {report['generatedAt']}")
+    lines.append("")
+
+    lines.append("## Overview")
+    lines.append("")
+    lines.append("| Metric | Count |")
+    lines.append("|--------|-------|")
+    lines.append(f"| Repositories scanned | {overview['repositoriesScanned']} |")
+    lines.append(f"| Total dependencies | {overview['totalDependencies']} |")
+    lines.append(f"| Patch updates available | {overview['updatesAvailable']['patch']} |")
+    lines.append(f"| Minor updates available | {overview['updatesAvailable']['minor']} |")
+    lines.append(f"| Major updates available | {overview['updatesAvailable']['major']} |")
+    lines.append("")
+
+    lines.append("## Changes Since Last Scan")
+    lines.append("")
+    if changes["added"] == 0 and changes["removed"] == 0 and changes["versionChanged"] == 0:
+        lines.append("No changes detected.")
+    else:
+        lines.append("| Change Type | Count |")
+        lines.append("|-------------|-------|")
+        lines.append(f"| Added | {changes['added']} |")
+        lines.append(f"| Removed | {changes['removed']} |")
+        lines.append(f"| Version changed | {changes['versionChanged']} |")
+
+        if "changeDetails" in report:
+            lines.append("")
+            lines.append("### Change Details")
+            lines.append("")
+            for repo, details in report["changeDetails"].items():
+                lines.append(f"**{repo}**")
+                lines.append("")
+                if "added" in details:
+                    lines.append("| Added | Version | Latest | Update Type |")
+                    lines.append("|-------|---------|--------|-------------|")
+                    for dep in details["added"]:
+                        latest = dep.get("latestVersion") or "-"
+                        utype = dep.get("updateType") or "-"
+                        lines.append(f"| {dep['name']} | {dep['version']} | {latest} | {utype} |")
+                    lines.append("")
+                if "removed" in details:
+                    lines.append("| Removed | Last Version |")
+                    lines.append("|---------|--------------|")
+                    for dep in details["removed"]:
+                        lines.append(f"| {dep['name']} | {dep['version']} |")
+                    lines.append("")
+                if "versionChanged" in details:
+                    lines.append("| Changed | Previous | Current | Latest | Update Type |")
+                    lines.append("|---------|----------|---------|--------|-------------|")
+                    for dep in details["versionChanged"]:
+                        latest = dep.get("latestVersion") or "-"
+                        utype = dep.get("updateType") or "-"
+                        lines.append(f"| {dep['name']} | {dep['previousVersion']} | {dep['currentVersion']} | {latest} | {utype} |")
+                    lines.append("")
+
+    lines.append("")
+    lines.append("## All Dependencies")
+    lines.append("")
+
+    for repo_name, repo_data in report["repositories"].items():
+        manager = repo_data.get("manager") or "unknown"
+        file_name = repo_data.get("file") or "unknown"
+        deps = repo_data.get("dependencies", [])
+
+        lines.append(f"### {repo_name}")
+        lines.append(f"*{manager} — {file_name}*")
+        lines.append("")
+        lines.append("| Dependency | Current | Latest | Update |")
+        lines.append("|------------|---------|--------|--------|")
+
+        for dep in deps:
+            current = dep.get("currentVersion") or "-"
+            latest = dep.get("latestVersion") or "-"
+            utype = dep.get("updateType")
+
+            if utype == "major":
+                badge = "major"
+            elif utype == "minor":
+                badge = "minor"
+            elif utype == "patch":
+                badge = "patch"
+            else:
+                badge = " * "
+
+            lines.append(f"| {dep['name']} | {current} | {latest} | {badge} |")
+
+        lines.append("")
+
+    return "\n".join(lines)
+
+
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) < 4 or len(sys.argv) > 5:
         print(
-            "Usage: python3 scripts/compare.py <baseline.json> <latest.json> <output.json>"
+            "Usage: python3 compare.py <baseline.json> <latest.json> <output.json> [summary.md]"
         )
         sys.exit(1)
 
     old_path = sys.argv[1]
     new_path = sys.argv[2]
     output_path = sys.argv[3]
+    summary_path = sys.argv[4] if len(sys.argv) == 5 else None
 
     timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -231,6 +328,13 @@ def main():
         f"changed: {changes['totals']['versionChanged']}"
     )
     print(f"Report saved: {output_path}")
+
+    if summary_path:
+        summary = generate_summary(report)
+        os.makedirs(os.path.dirname(summary_path) or ".", exist_ok=True)
+        with open(summary_path, "w") as f:
+            f.write(summary)
+        print(f"Summary saved: {summary_path}")
 
 
 if __name__ == "__main__":

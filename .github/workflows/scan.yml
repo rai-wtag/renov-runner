@@ -61,7 +61,11 @@ jobs:
           python3 main/scripts/compare.py \
             data/baseline.json \
             main/reports/latest.json \
-            main/reports/scan-report.json
+            main/reports/scan-report.json \
+            main/reports/summary.md
+
+      - name: Print summary
+        run: cat main/reports/summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update baseline
         run: |
