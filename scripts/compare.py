@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 
 def load_report(filepath):
+    # return empty structure if missing or invalid.
     if not os.path.exists(filepath):
         return {"repositories": {}}
     try:
@@ -11,7 +12,6 @@ def load_report(filepath):
             return json.load(f)
     except (json.JSONDecodeError, IOError):
         return {"repositories": {}}
-
 
 def extract_deps(report):
     result = {}
@@ -33,9 +33,9 @@ def extract_deps(report):
                     current_value = dep.get("currentValue", "unknown")
                     raw_updates = dep.get("updates", [])
 
+                    # priority: (major > minor > patch)
                     latest_version = None
                     update_type = None
-
                     for upd in raw_updates:
                         t = upd.get("updateType")
                         v = upd.get("newVersion")
@@ -62,7 +62,6 @@ def extract_deps(report):
         result[repo_name] = deps
     return result
 
-
 def find_changes(old_deps, new_deps):
     changes = {
         "totals": {"added": 0, "removed": 0, "versionChanged": 0},
@@ -77,6 +76,7 @@ def find_changes(old_deps, new_deps):
         removed = []
         version_changed = []
 
+        # added deps
         for name in sorted(new_repo.keys()):
             if name not in old_repo:
                 info = new_repo[name]
@@ -87,6 +87,7 @@ def find_changes(old_deps, new_deps):
                     "updateType": info["updateType"],
                 })
 
+        # removed dep
         for name in sorted(old_repo.keys()):
             if name not in new_repo:
                 info = old_repo[name]
@@ -95,6 +96,7 @@ def find_changes(old_deps, new_deps):
                     "version": info["version"],
                 })
 
+        # version changes (only if version actually changed)
         for name in sorted(new_repo.keys()):
             if name in old_repo:
                 if old_repo[name]["version"] != new_repo[name]["version"]:
@@ -106,10 +108,12 @@ def find_changes(old_deps, new_deps):
                         "updateType": new_repo[name]["updateType"],
                     })
 
+        # totals
         changes["totals"]["added"] += len(added)
         changes["totals"]["removed"] += len(removed)
         changes["totals"]["versionChanged"] += len(version_changed)
 
+        # per-repo changes if any
         if added or removed or version_changed:
             changes["details"][repo] = {}
             if added:
@@ -120,7 +124,6 @@ def find_changes(old_deps, new_deps):
                 changes["details"][repo]["versionChanged"] = version_changed
 
     return changes
-
 
 def build_report(new_deps, changes):
     report = {
@@ -174,7 +177,6 @@ def build_report(new_deps, changes):
 
     return report
 
-
 def main():
     if len(sys.argv) != 4:
         print("Usage: python3 scripts/compare.py <previous.json> <latest.json> <output.json>")
@@ -201,7 +203,6 @@ def main():
     print(f"Updates — patch: {report['overview']['updatesAvailable']['patch']}, minor: {report['overview']['updatesAvailable']['minor']}, major: {report['overview']['updatesAvailable']['major']}")
     print(f"Changes — added: {changes['totals']['added']}, removed: {changes['totals']['removed']}, changed: {changes['totals']['versionChanged']}")
     print(f"Saved: {output_path}")
-
 
 if __name__ == "__main__":
     main()

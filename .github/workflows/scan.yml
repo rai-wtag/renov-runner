@@ -32,15 +32,14 @@ jobs:
 
       - run: mkdir -p reports/latest reports/previous
 
-      # Restore the baseline cache (if found from previous run)
+      # restore the baseline cache (if exists)
       - name: Restore baseline cache
         uses: actions/cache@v4
         with:
           path: reports/previous/github.json
           key: renovate-baseline-v1
-          restore-keys: |
-            renovate-baseline-v1
 
+      # ensure baseline file exists
       - name: Ensure baseline exists
         run: |
           if [ ! -f reports/previous/github.json ]; then
@@ -79,15 +78,16 @@ jobs:
           path: reports/latest/scan-report.json
           retention-days: 90
 
-      # Update baseline for the next run and cache it
+      # update baseline for the next run
       - name: Update baseline for next run
         run: |
-          mkdir -p reports/previous
           cp reports/latest/github.json reports/previous/github.json
 
-      # Cache the new baseline for the next run
+      # cache the new baseline for next run
       - name: Cache new baseline
         uses: actions/cache@v4
         with:
           path: reports/previous/github.json
           key: renovate-baseline-v1
+          save-on-error: true
+          save-always: true
