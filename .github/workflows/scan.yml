@@ -2,44 +2,72 @@ name: Renovate Multi-Repo Scan
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 1 * * *' 
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout workflow repo
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: Install Renovate
         run: npm install -g renovate
 
-      - name: Prepare report directories
+      - name: Create directories
         run: |
-          mkdir -p reports/latest reports/previous
+          mkdir -p reports/latest reports/previous repos
 
-      - name: Run Renovate for each repo
+      - name: Restore baseline cache
+        uses: actions/cache@v4
+        with:
+          path: renovate-baseline
+          key: renovate-baseline-v1
+          restore-keys: renovate-baseline-v1
+
+      - name: Multi-Repo Renovate Scan
         run: |
           for repo in $(jq -r '.repositories | join(" ")' config/github.json); do
             echo "Scanning $repo..."
-            renovate --dry-run --repository=$repo --log-level info
-            # Move latest scan to repo-specific file
-            if [ -f reports/latest/github.json ]; then
-              mv reports/latest/github.json reports/latest/${repo}.json
+            REPO_DIR="repos/$(basename $repo)"
+            
+            # Clone or update repo
+            if [ -d "$REPO_DIR" ]; then
+              git -C "$REPO_DIR" fetch --all
+              git -C "$REPO_DIR" reset --hard origin/main
+            else
+              git clone "https://github.com/$repo.git" "$REPO_DIR"
             fi
+
+            # Run Renovate inside the repo (DRY-RUN)
+            (cd "$REPO_DIR" && renovate --dry-run)
+
+            # Copy latest scan to reports/latest
+            mkdir -p "reports/latest/$repo"
+            cp "$REPO_DIR/renovate.json" "reports/latest/$repo/scan-report.json" 2>/dev/null || echo "No renovate.json for $repo"
           done
 
-      - name: Compare scans and generate report
-        run: python3 scripts/compare.py
+      - name: Compare scans
+        run: |
+          python3 scripts/compare.py
 
-      - name: Upload scan artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: scan-report-${{ github.run_id }}
           path: reports/latest/scan-report.json
+
+      - name: Update baseline
+        run: |
+          cp -r reports/latest/* reports/previous/
+          echo "Baseline updated"
+
+      - name: Save baseline cache
+        uses: actions/cache@v4
+        with:
+          path: renovate-baseline
+          key: renovate-baseline-v1
