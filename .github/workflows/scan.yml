@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: renovate-scan
+  cancel-in-progress: true
+
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -28,12 +32,14 @@ jobs:
 
       - run: mkdir -p reports/latest reports/previous
 
-      - name: Download previous baseline
-        uses: actions/download-artifact@v4
+      # Restore the baseline cache (if found from previous run)
+      - name: Restore baseline cache
+        uses: actions/cache@v4
         with:
-          name: scan-baseline
-          path: reports/previous/
-        continue-on-error: true
+          path: reports/previous/github.json
+          key: renovate-baseline-v1
+          restore-keys: |
+            renovate-baseline-v1
 
       - name: Ensure baseline exists
         run: |
@@ -73,10 +79,15 @@ jobs:
           path: reports/latest/scan-report.json
           retention-days: 90
 
-      - name: Upload new baseline
-        uses: actions/upload-artifact@v4
+      # Update baseline for the next run and cache it
+      - name: Update baseline for next run
+        run: |
+          mkdir -p reports/previous
+          cp reports/latest/github.json reports/previous/github.json
+
+      # Cache the new baseline for the next run
+      - name: Cache new baseline
+        uses: actions/cache@v4
         with:
-          name: scan-baseline
-          path: reports/latest/github.json
-          overwrite: true
-          retention-days: 90
+          path: reports/previous/github.json
+          key: renovate-baseline-v1
