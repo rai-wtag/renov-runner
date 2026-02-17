@@ -12,50 +12,27 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: main
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
-      - run: npm install -g renovate
-
-      - name: Set timestamp
-        id: vars
+      - name: Install Renovate
         run: |
-          TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          LABEL=$(date -u +%Y-%m-%d_%H%M%S)
-          echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
-          echo "label=$LABEL" >> "$GITHUB_OUTPUT"
-
-      - name: Restore baseline from cache
-        id: cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: baseline/baseline.json
-          key: baseline-never-matches
-          restore-keys: |
-            baseline-
-
-      - name: Check baseline status
-        run: |
-          if [ -f baseline/baseline.json ]; then
-            echo "Baseline restored from cache"
-            echo "Size: $(wc -c < baseline/baseline.json) bytes"
-          else
-            echo "No baseline found — first run, creating empty baseline"
-            mkdir -p baseline
-            echo '{"repositories":{}}' > baseline/baseline.json
-          fi
+          npm install -g renovate
+          echo "Renovate version: $(renovate --version)"
 
       - name: Read repo list
         id: repos
         run: |
-          REPOS=$(cat config/github.json | jq -r '.repositories | join(" ")')
+          REPOS=$(jq -r '.repositories | join(" ")' config/github.json)
           echo "list=$REPOS" >> "$GITHUB_OUTPUT"
+          echo "Scanning: $REPOS"
 
       - name: Run Renovate scan
         env:
@@ -66,34 +43,25 @@ jobs:
             --platform=github \
             --dry-run=full \
             --report-type=file \
-            --report-path=reports/latest.json \
+            --report-path=reports/renovate-report.json \
             ${{ steps.repos.outputs.list }}
 
-      - name: Generate report
+      - name: Validate report
         run: |
-          python3 scripts/compare.py \
-            baseline/baseline.json \
-            reports/latest.json \
-            reports/scan-report.json \
-            reports/summary.md
+          if [ ! -f reports/renovate-report.json ]; then
+            echo "Report not generated"
+            exit 1
+          fi
+          SIZE=$(wc -c < reports/renovate-report.json)
+          echo "Report generated: ${SIZE} bytes"
+          REPO_COUNT=$(jq '.repositories | keys | length' reports/renovate-report.json 2>/dev/null || echo "unknown")
+          echo "Repositories scanned: ${REPO_COUNT}"
 
-      - name: Print summary
-        run: cat reports/summary.md >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Update baseline for next run
-        run: |
-          mkdir -p baseline
-          cp reports/latest.json baseline/baseline.json
-
-      - name: Save baseline to cache
-        uses: actions/cache/save@v4
-        with:
-          path: baseline/baseline.json
-          key: baseline-${{ steps.vars.outputs.label }}
-
-      - name: Upload scan report
+      - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scan-report-${{ steps.vars.outputs.label }}
-          path: reports/scan-report.json
+          name: renovate-report
+          path: reports/renovate-report.json
           retention-days: 90
+          overwrite: true
+          if-no-files-found: error
