@@ -3,7 +3,6 @@
   "endpoint": null,
   "repositories": [
     "rai-wtag/renov-pilot05",
-    "rai-wtag/renov-pilot06",
-    "rai-wtag/wdevnlp-02"
+    "rai-wtag/renov-pilot06"
   ]
 }
