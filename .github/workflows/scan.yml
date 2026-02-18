@@ -48,6 +48,7 @@ jobs:
       - name: Run Renovate scan
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          LOG_LEVEL: debug
         run: |
           mkdir -p reports
           renovate \
