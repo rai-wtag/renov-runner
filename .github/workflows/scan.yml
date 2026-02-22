@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '24'
 
-      # for bundler ruby isntall
+      # For bundler — Renovate needs Ruby/Bundler to parse Gemfile
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -31,20 +31,19 @@ jobs:
 
       - name: Install Bundler
         run: gem install bundler
-      # 
 
       - name: Install Renovate
         run: |
           npm install -g renovate
           echo "Renovate version: $(renovate --version)"
-          
+
       - name: Read repo list
         id: repos
         run: |
           REPOS=$(jq -r '.repositories | join(" ")' config/github.json)
           echo "list=$REPOS" >> "$GITHUB_OUTPUT"
           echo "Scanning: $REPOS"
-          
+
       - name: Run Renovate scan
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
@@ -57,7 +56,7 @@ jobs:
             --report-type=file \
             --report-path=reports/renovate-report.json \
             ${{ steps.repos.outputs.list }}
-            
+
       - name: Validate report
         run: |
           if [ ! -f reports/renovate-report.json ]; then
@@ -68,12 +67,33 @@ jobs:
           echo "Report generated: ${SIZE} bytes"
           REPO_COUNT=$(jq '.repositories | keys | length' reports/renovate-report.json 2>/dev/null || echo "unknown")
           echo "Repositories scanned: ${REPO_COUNT}"
-          
+
+      - name: Minify report
+        run: |
+          jq -c '.' reports/renovate-report.json > reports/renovate-report.min.json
+          ORIG=$(wc -c < reports/renovate-report.json)
+          MIN=$(wc -c < reports/renovate-report.min.json)
+          echo "Original: ${ORIG} bytes → Minified: ${MIN} bytes"
+
+      # ──────────────────────────────────────────────────────
+      # GCS Upload — will introduce after bucket
+      # ──────────────────────────────────────────────────────
+      # - name: Authenticate to GCS
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     credentials_json: ${{ secrets.GCS_SA_REPORT_WRITER_KEY }}
+      #
+      # - name: Upload report to GCS
+      #   run: |
+      #     gsutil cp reports/renovate-report.min.json \
+      #       gs://central-bucket/reports/github/renovate-report.json
+      # ──────────────────────────────────────────────────────
+
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: renovate-report
-          path: reports/renovate-report.json
+          path: reports/renovate-report.min.json
           retention-days: 90
           overwrite: true
           if-no-files-found: error
