@@ -1,0 +1,469 @@
+{
+    "problems": [
+        {
+            "name": "renovate",
+            "level": 40,
+            "logContext": "c17db8fb-7270-411c-9f0c-50e4b69fa77e",
+            "documentationUrl": "https://github.com/renovatebot/renovate/discussions/39309",
+            "msg": "Using the default gitAuthor email address, renovate@whitesourcesoftware.com, is not recommended on GitHub.com, as this corresponds to a user owned by Mend and used by users of the forking-renovate[bot] GitHub App. For security and authenticity reasons, Mend enables \"Vigilant Mode\" on this account to visibly flag unsigned commits. As an account you do not control, you will not be able to sign commits. If you are comfortable with the `Unverified` signatures on each commit, no work is needed. Otherwise, it is recommended to migrate to a user account you own"
+        }
+    ],
+    "repositories": {
+        "rai-wtag/renov-pilot05": {
+            "problems": [],
+            "branches": [
+                {
+                    "branchName": "renovate/rubygems-rack-vulnerability",
+                    "prNo": null,
+                    "prTitle": "Update dependency rack to v2.2.22 [SECURITY]",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rack",
+                            "displayPending": "",
+                            "fixedVersion": "2.2.12",
+                            "currentVersion": "2.2.12",
+                            "currentValue": "\"2.2.12\"",
+                            "newValue": "\"2.2.22\"",
+                            "newVersion": "2.2.22",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "rack"
+                        }
+                    ]
+                },
+                {
+                    "branchName": "renovate/all-non-major-dependencies",
+                    "prNo": null,
+                    "prTitle": "Update all non-major dependencies",
+                    "result": "no-work",
+                    "upgrades": [
+                        {
+                            "datasource": "rubygems",
+                            "depName": "alchemy_cms",
+                            "displayPending": "",
+                            "fixedVersion": "7.4.12",
+                            "currentVersion": "7.4.12",
+                            "currentValue": "\"7.4.12\"",
+                            "newValue": "\"7.4.13\"",
+                            "newVersion": "7.4.13",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "alchemy_cms"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "rails",
+                            "displayPending": "",
+                            "fixedVersion": "7.0.8.1",
+                            "currentVersion": "7.0.8.1",
+                            "currentValue": "\"7.0.8.1\"",
+                            "newValue": "\"7.2.3\"",
+                            "newVersion": "7.2.3",
+                            "packageFile": "Gemfile",
+                            "updateType": "minor",
+                            "packageName": "rails"
+                        },
+                        {
+                            "datasource": "rubygems",
+                            "depName": "sidekiq",
+                            "displayPending": "",
+                            "fixedVersion": "6.5.10",
+                            "currentVersion": "6.5.10",
+                            "currentValue": "\"6.5.10\"",
+                            "newValue": "\"6.5.12\"",
+                            "newVersion": "6.5.12",
+                            "packageFile": "Gemfile",
+                            "updateType": "patch",
+                            "packageName": "sidekiq"
+                        }
+                    ]
+                }
+            ],
+            "packageFiles": {
+                "bundler": [
+                    {
+                        "registryUrls": [
+                            "https://rubygems.org"
+                        ],
+                        "deps": [
+                            {
+                                "depName": "ruby",
+                                "currentValue": ">= 3.0",
+                                "datasource": "ruby-version",
+                                "registryUrls": null,
+                                "updates": [],
+                                "packageName": "ruby",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/ruby/ruby",
+                                "registryUrl": "https://www.ruby-lang.org/",
+                                "homepage": "https://www.ruby-lang.org",
+                                "currentVersion": "4.0.1",
+                                "currentVersionTimestamp": "2026-01-13T00:00:00.000Z",
+                                "currentVersionAgeInDays": 40
+                            },
+                            {
+                                "depName": "rails",
+                                "managerData": {
+                                    "lineNumber": 4
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"7.0.8.1\"",
+                                "lockedVersion": "7.0.8.1",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "7.2.3",
+                                        "newValue": "\"7.2.3\"",
+                                        "releaseTimestamp": "2025-10-28T23:25:41.296Z",
+                                        "newVersionAgeInDays": 116,
+                                        "newMajor": 7,
+                                        "newMinor": 2,
+                                        "newPatch": 3,
+                                        "updateType": "minor",
+                                        "isBreaking": false,
+                                        "libYears": 1.6827290345953831,
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "8.1.2",
+                                        "newValue": "\"8.1.2\"",
+                                        "releaseTimestamp": "2026-01-08T20:18:51.400Z",
+                                        "newVersionAgeInDays": 44,
+                                        "newMajor": 8,
+                                        "newMinor": 1,
+                                        "newPatch": 2,
+                                        "updateType": "major",
+                                        "isBreaking": true,
+                                        "libYears": 1.8796338450976662,
+                                        "branchName": "renovate/major-ruby-on-rails-packages"
+                                    }
+                                ],
+                                "packageName": "rails",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rails/rails",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://rubyonrails.org",
+                                "changelogUrl": "https://github.com/rails/rails/releases/tag/v8.1.2",
+                                "mostRecentTimestamp": "2026-01-08T20:18:51.400Z",
+                                "currentVersion": "7.0.8.1",
+                                "currentVersionTimestamp": "2024-02-21T18:43:18.461Z",
+                                "currentVersionAgeInDays": 731,
+                                "isSingleVersion": true,
+                                "fixedVersion": "7.0.8.1"
+                            },
+                            {
+                                "depName": "devise",
+                                "managerData": {
+                                    "lineNumber": 5
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"4.9.4\"",
+                                "lockedVersion": "4.9.4",
+                                "updates": [
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "5.0.2",
+                                        "newValue": "\"5.0.2\"",
+                                        "releaseTimestamp": "2026-02-18T14:07:02.883Z",
+                                        "newVersionAgeInDays": 3,
+                                        "newMajor": 5,
+                                        "newMinor": 0,
+                                        "newPatch": 2,
+                                        "updateType": "major",
+                                        "isBreaking": true,
+                                        "libYears": 1.8604630749302384,
+                                        "branchName": "renovate/devise-5.x"
+                                    }
+                                ],
+                                "packageName": "devise",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/heartcombo/devise",
+                                "registryUrl": "https://rubygems.org",
+                                "changelogUrl": "https://github.com/heartcombo/devise/blob/main/CHANGELOG.md",
+                                "mostRecentTimestamp": "2026-02-18T14:07:02.883Z",
+                                "currentVersion": "4.9.4",
+                                "currentVersionTimestamp": "2024-04-10T12:27:39.352Z",
+                                "currentVersionAgeInDays": 682,
+                                "isSingleVersion": true,
+                                "fixedVersion": "4.9.4"
+                            },
+                            {
+                                "depName": "sidekiq",
+                                "managerData": {
+                                    "lineNumber": 6
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"6.5.10\"",
+                                "lockedVersion": "6.5.10",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "6.5.12",
+                                        "newValue": "\"6.5.12\"",
+                                        "releaseTimestamp": "2023-10-10T15:13:19.200Z",
+                                        "newVersionAgeInDays": 865,
+                                        "newMajor": 6,
+                                        "newMinor": 5,
+                                        "newPatch": 12,
+                                        "updateType": "patch",
+                                        "isBreaking": false,
+                                        "libYears": 0.02181684372470148,
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "8.1.1",
+                                        "newValue": "\"8.1.1\"",
+                                        "releaseTimestamp": "2026-02-17T18:35:22.183Z",
+                                        "newVersionAgeInDays": 4,
+                                        "newMajor": 8,
+                                        "newMinor": 1,
+                                        "newPatch": 1,
+                                        "updateType": "major",
+                                        "isBreaking": true,
+                                        "libYears": 2.378425416730086,
+                                        "branchName": "renovate/sidekiq-8.x"
+                                    }
+                                ],
+                                "packageName": "sidekiq",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/sidekiq/sidekiq",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://sidekiq.org",
+                                "changelogUrl": "https://github.com/sidekiq/sidekiq/blob/main/Changes.md",
+                                "mostRecentTimestamp": "2026-02-17T18:35:22.183Z",
+                                "currentVersion": "6.5.10",
+                                "currentVersionTimestamp": "2023-10-02T15:34:58.241Z",
+                                "currentVersionAgeInDays": 873,
+                                "isSingleVersion": true,
+                                "fixedVersion": "6.5.10"
+                            },
+                            {
+                                "depName": "puma",
+                                "managerData": {
+                                    "lineNumber": 7
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"5.6.9\"",
+                                "lockedVersion": "5.6.9",
+                                "updates": [
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "7.2.0",
+                                        "newValue": "\"7.2.0\"",
+                                        "newMajor": 7,
+                                        "newMinor": 2,
+                                        "newPatch": 0,
+                                        "updateType": "major",
+                                        "isBreaking": true,
+                                        "branchName": "renovate/puma-7.x"
+                                    }
+                                ],
+                                "packageName": "puma",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "registryUrl": "https://rubygems.org",
+                                "currentVersion": "5.6.9",
+                                "isSingleVersion": true,
+                                "fixedVersion": "5.6.9"
+                            },
+                            {
+                                "depName": "rack",
+                                "managerData": {
+                                    "lineNumber": 8
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"2.2.12\"",
+                                "lockedVersion": "2.2.12",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "2.2.22",
+                                        "newValue": "\"2.2.22\"",
+                                        "releaseTimestamp": "2026-02-16T03:40:25.495Z",
+                                        "newVersionAgeInDays": 6,
+                                        "newMajor": 2,
+                                        "newMinor": 2,
+                                        "newPatch": 22,
+                                        "updateType": "patch",
+                                        "isBreaking": false,
+                                        "libYears": 0.9559262600520041,
+                                        "branchName": "renovate/rubygems-rack-vulnerability"
+                                    }
+                                ],
+                                "packageName": "rack",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rack/rack",
+                                "registryUrl": "https://rubygems.org",
+                                "changelogUrl": "https://github.com/rack/rack/blob/main/CHANGELOG.md",
+                                "mostRecentTimestamp": "2026-02-16T03:42:16.424Z",
+                                "currentVersion": "2.2.12",
+                                "currentVersionTimestamp": "2025-03-04T05:45:34.958Z",
+                                "currentVersionAgeInDays": 355,
+                                "isSingleVersion": true,
+                                "fixedVersion": "2.2.12"
+                            },
+                            {
+                                "depName": "alchemy_cms",
+                                "managerData": {
+                                    "lineNumber": 9
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"7.4.12\"",
+                                "lockedVersion": "7.4.12",
+                                "updates": [
+                                    {
+                                        "bucket": "non-major",
+                                        "newVersion": "7.4.13",
+                                        "newValue": "\"7.4.13\"",
+                                        "releaseTimestamp": "2026-02-17T09:38:05.780Z",
+                                        "newVersionAgeInDays": 4,
+                                        "newMajor": 7,
+                                        "newMinor": 4,
+                                        "newPatch": 13,
+                                        "updateType": "patch",
+                                        "isBreaking": false,
+                                        "libYears": 0.07873316368594623,
+                                        "branchName": "renovate/all-non-major-dependencies"
+                                    },
+                                    {
+                                        "bucket": "major",
+                                        "newVersion": "8.1.3",
+                                        "newValue": "\"8.1.3\"",
+                                        "releaseTimestamp": "2026-02-17T09:50:51.990Z",
+                                        "newVersionAgeInDays": 4,
+                                        "newMajor": 8,
+                                        "newMinor": 1,
+                                        "newPatch": 3,
+                                        "updateType": "major",
+                                        "isBreaking": true,
+                                        "libYears": 0.0787574600456621,
+                                        "branchName": "renovate/alchemy_cms-8.x"
+                                    }
+                                ],
+                                "packageName": "alchemy_cms",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/AlchemyCMS/alchemy_cms",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://alchemy-cms.com",
+                                "changelogUrl": "https://github.com/AlchemyCMS/alchemy_cms/blob/main/CHANGELOG.md",
+                                "mostRecentTimestamp": "2026-02-17T09:50:51.990Z",
+                                "currentVersion": "7.4.12",
+                                "currentVersionTimestamp": "2026-01-19T15:55:56.730Z",
+                                "currentVersionAgeInDays": 33,
+                                "isSingleVersion": true,
+                                "fixedVersion": "7.4.12"
+                            },
+                            {
+                                "depName": "rspec",
+                                "managerData": {
+                                    "lineNumber": 12
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"3.13.2\"",
+                                "depTypes": [
+                                    "development",
+                                    "test"
+                                ],
+                                "lockedVersion": "3.13.2",
+                                "updates": [],
+                                "packageName": "rspec",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rspec/rspec",
+                                "registryUrl": "https://rubygems.org",
+                                "sourceDirectory": "rspec",
+                                "homepage": "https://rspec.info",
+                                "mostRecentTimestamp": "2026-02-18T15:56:41.080Z",
+                                "currentVersion": "3.13.2",
+                                "currentVersionTimestamp": "2025-10-21T09:50:39.502Z",
+                                "currentVersionAgeInDays": 123,
+                                "fixedVersion": "3.13.2"
+                            },
+                            {
+                                "depName": "rubocop",
+                                "managerData": {
+                                    "lineNumber": 13
+                                },
+                                "datasource": "rubygems",
+                                "currentValue": "\"1.84.2\"",
+                                "depTypes": [
+                                    "development",
+                                    "test"
+                                ],
+                                "lockedVersion": "1.84.2",
+                                "updates": [],
+                                "packageName": "rubocop",
+                                "versioning": "ruby",
+                                "warnings": [],
+                                "sourceUrl": "https://github.com/rubocop/rubocop",
+                                "registryUrl": "https://rubygems.org",
+                                "homepage": "https://rubocop.org/",
+                                "changelogUrl": "https://github.com/rubocop/rubocop/releases/tag/v1.84.2",
+                                "mostRecentTimestamp": "2026-02-12T07:26:23.994Z",
+                                "currentVersion": "1.84.2",
+                                "currentVersionTimestamp": "2026-02-12T07:26:23.994Z",
+                                "currentVersionAgeInDays": 10,
+                                "fixedVersion": "1.84.2"
+                            }
+                        ],
+                        "lockFiles": [
+                            "Gemfile.lock"
+                        ],
+                        "packageFile": "Gemfile"
+                    }
+                ]
+            },
+            "libYearsWithStatus": {
+                "libYears": {
+                    "managers": {
+                        "bundler": 7.153206056855657
+                    },
+                    "total": 7.153206056855657
+                },
+                "dependencyStatus": {
+                    "outdated": 6,
+                    "total": 9
+                }
+            }
+        },
+        "rai-wtag/renov-pilot06": {
+            "problems": [
+                {
+                    "name": "renovate",
+                    "level": 40,
+                    "logContext": "c17db8fb-7270-411c-9f0c-50e4b69fa77e",
+                    "error": {
+                        "validationSource": ".github/renovate.json",
+                        "validationError": "Invalid JSON (parsing failed)",
+                        "validationMessage": "Syntax error: expecting end of expression or separator near      \"enab",
+                        "message": "config-validation",
+                        "stack": "Error: config-validation\n    at checkForRepoConfigError (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/init/merge.ts:178:17)\n    at mergeRenovateConfig (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/init/merge.ts:218:3)\n    at getRepoConfig (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/init/config.ts:14:12)\n    at initRepo (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/init/index.ts:60:12)\n    at instrument.attributes (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/index.ts:83:18)\n    at renovateRepository (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/index.ts:57:42)\n    at instrument.attributes (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/global/index.ts:219:11)\n    at start (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/global/index.ts:204:7)\n    at file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/renovate.ts:21:22"
+                    },
+                    "msg": "Repository has invalid config"
+                },
+                {
+                    "name": "renovate",
+                    "level": 40,
+                    "logContext": "c17db8fb-7270-411c-9f0c-50e4b69fa77e",
+                    "error": {
+                        "message": "config-validation",
+                        "stack": "Error: config-validation\n    at renovateRepository (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/repository/index.ts:111:13)\n    at instrument.attributes (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/global/index.ts:219:11)\n    at start (file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/workers/global/index.ts:204:7)\n    at file:///opt/hostedtoolcache/node/24.13.0/x64/lib/node_modules/renovate/lib/renovate.ts:21:22"
+                    },
+                    "msg": "Repository has invalid config"
+                }
+            ],
+            "branches": [],
+            "packageFiles": {}
+        }
+    }
+}
