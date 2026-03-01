@@ -79,6 +79,9 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCS_SA_KEY }}
 
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
       - name: Upload report to GCS
         run: |
           gsutil cp reports/renovate-report.min.json \
