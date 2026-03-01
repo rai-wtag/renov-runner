@@ -22,7 +22,6 @@ jobs:
         with:
           node-version: '24'
 
-      # For bundler — Renovate needs Ruby/Bundler to parse Gemfile
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -75,19 +74,16 @@ jobs:
           MIN=$(wc -c < reports/renovate-report.min.json)
           echo "Original: ${ORIG} bytes → Minified: ${MIN} bytes"
 
-      # ──────────────────────────────────────────────────────
-      # GCS Upload — will introduce after bucket
-      # ──────────────────────────────────────────────────────
-      # - name: Authenticate to GCS
-      #   uses: google-github-actions/auth@v2
-      #   with:
-      #     credentials_json: ${{ secrets.GCS_SA_REPORT_WRITER_KEY }}
-      #
-      # - name: Upload report to GCS
-      #   run: |
-      #     gsutil cp reports/renovate-report.min.json \
-      #       gs://central-bucket/reports/github/renovate-report.json
-      # ──────────────────────────────────────────────────────
+      - name: Authenticate to GCS
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCS_SA_KEY }}
+
+      - name: Upload report to GCS
+        run: |
+          gsutil cp reports/renovate-report.min.json \
+            gs://welldev_renovate_reports_gulli/renov-runner/renovate-report.json
+          echo "Uploaded to gs://welldev_renovate_reports_gulli/renov-runner/"
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
