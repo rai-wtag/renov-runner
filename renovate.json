@@ -7,7 +7,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["major"],
-      "enabled": false
+      "enabled": true
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
