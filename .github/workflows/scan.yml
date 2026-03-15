@@ -19,8 +19,10 @@ jobs:
     steps:
       - name: Validate secrets
         env:
+          HAS_RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN != '' }}
           HAS_GCS_SA_KEY: ${{ secrets.GCS_SA_KEY != '' }}
         run: |
+          [ "$HAS_RENOVATE_TOKEN" = "true" ] || { echo "::error::RENOVATE_TOKEN secret missing"; exit 1; }
           [ "$HAS_GCS_SA_KEY" = "true" ] || { echo "::error::GCS_SA_KEY secret missing"; exit 1; }
 
       - name: Checkout
@@ -51,7 +53,7 @@ jobs:
 
       - name: Run Renovate scan
         env:
-          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
           LOG_LEVEL: debug
         run: |
           mkdir -p ${{ env.REPORT_DIR }}
