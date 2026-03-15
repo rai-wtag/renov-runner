@@ -10,6 +10,7 @@ permissions:
 
 env:
   GCS_BUCKET: welldev_renovate_reports_gulli
+  GCS_BUCKET_PREFIX: trueact 
   REPORT_DIR: reports
 
 jobs:
@@ -86,10 +87,10 @@ jobs:
       - name: Upload to GCS
         run: |
           gsutil cp ${{ env.REPORT_DIR }}/renovate-report.min.json \
-            gs://${{ env.GCS_BUCKET }}/${{ github.event.repository.name }}/renovate-report.json
+            gs://${{ env.GCS_BUCKET }}/${{ env.GCS_BUCKET_PREFIX }}/${{ github.event.repository.name }}/renovate-report.json
 
       - name: Verify upload
-        run: gsutil stat gs://${{ env.GCS_BUCKET }}/${{ github.event.repository.name }}/renovate-report.json > /dev/null
+        run: gsutil stat gs://${{ env.GCS_BUCKET }}/${{ env.GCS_BUCKET_PREFIX }}/${{ github.event.repository.name }}/renovate-report.json > /dev/null
 
       - name: Upload artifact
         if: always()
