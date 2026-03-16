@@ -58,5 +58,5 @@ jobs:
 
       - name: Upload to GCS
         run: |
-          gsutil cp ${{ env.REPORT_DIR }}/renovate-report.min.json \
+          gsutil cp ${{ env.REPORT_DIR }}/renovate-report.json \
             gs://${{ env.GCS_BUCKET }}/${{ env.GCS_BUCKET_PREFIX }}/${{ github.event.repository.name }}/renovate-report.json
