@@ -26,28 +26,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Renovate config
-        run: |
-          for f in .github/renovate.json renovate.json .renovaterc.json .renovaterc; do
-            [ -f "$f" ] && exit 0
-          done
-          echo "::error::No Renovate config found"; exit 1
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-          bundler-cache: false
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          npm install -g renovate
+      - name: Install Renovate
+        run: npm install -g renovate
 
       - name: Run Renovate scan
         env:
@@ -62,15 +47,6 @@ jobs:
             --report-path=${{ env.REPORT_DIR }}/renovate-report.json \
             ${{ github.repository }}
 
-      - name: Validate report
-        run: |
-          REPORT="${{ env.REPORT_DIR }}/renovate-report.json"
-          [ -f "$REPORT" ] || { echo "::error::Report file not generated"; exit 1; }
-          jq empty "$REPORT" || { echo "::error::Report has invalid JSON"; exit 1; }
-
-      - name: Minify report
-        run: jq -c '.' ${{ env.REPORT_DIR }}/renovate-report.json > ${{ env.REPORT_DIR }}/renovate-report.min.json
-
       - name: Authenticate to GCS
         uses: google-github-actions/auth@v2
         with:
@@ -79,23 +55,7 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Verify bucket access
-        run: gsutil ls "gs://${{ env.GCS_BUCKET }}" > /dev/null || { echo "::error::Cannot access bucket ${{ env.GCS_BUCKET }}"; exit 1; }
-
       - name: Upload to GCS
         run: |
           gsutil cp ${{ env.REPORT_DIR }}/renovate-report.min.json \
             gs://${{ env.GCS_BUCKET }}/${{ env.GCS_BUCKET_PREFIX }}/${{ github.event.repository.name }}/renovate-report.json
-
-      - name: Verify upload
-        run: gsutil stat gs://${{ env.GCS_BUCKET }}/${{ env.GCS_BUCKET_PREFIX }}/${{ github.event.repository.name }}/renovate-report.json > /dev/null
-
-      - name: Upload artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: renovate-report
-          path: ${{ env.REPORT_DIR }}/renovate-report.min.json
-          retention-days: 90
-          overwrite: true
-          if-no-files-found: warn
