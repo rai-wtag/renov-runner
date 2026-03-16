@@ -37,6 +37,7 @@ jobs:
       - name: Run Renovate scan
         env:
           RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RENOVATE_CONFIG_FILE: renovate/renovate.json
           LOG_LEVEL: debug
         run: |
           mkdir -p ${{ env.REPORT_DIR }}
