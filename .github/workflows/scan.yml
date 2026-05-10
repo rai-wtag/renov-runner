@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  GCS_BUCKET: welldev_renovate_reports_gulli
+  GCS_BUCKET: welldev_renovate_reports_gulli 
   GCS_BUCKET_PREFIX: trueact-test
   REPORT_DIR: reports
 
